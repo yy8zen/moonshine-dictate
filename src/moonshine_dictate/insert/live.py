@@ -1,10 +1,8 @@
 """Unicode のキー入力として送る（要件 R5.3）。
 
-pynput の type() は OS ごとに次の方法で文字を送る。
-- Windows: SendInput の KEYEVENTF_UNICODE
-- macOS: CGEventKeyboardSetUnicodeString
+macOS でだけ使う。pynput の type() は CGEventKeyboardSetUnicodeString で文字を送る。
 
-Linux（X11）では使わない。XTest で日本語を送ると文字が化けるため、
+Windows と Linux（X11）では使わない。日本語を1文字ずつ送ると文字が化けるため、
 区切りごとのクリップボード貼り付けで代える（insert/__init__.py の create() を参照）。
 """
 

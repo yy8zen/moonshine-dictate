@@ -13,7 +13,7 @@ from moonshine_dictate.platform_info import IS_MACOS
 
 INSERT_METHODS = ("clipboard", "live")
 LOG_LEVELS = ("error", "info", "debug")
-MODEL_ARCHS = ("small-streaming", "tiny-streaming")
+MODEL_ARCHS = ("small-streaming", "tiny-streaming", "base")
 
 
 def default_hotkey() -> str:
@@ -69,10 +69,12 @@ autostart = false
 # ログの出力量: "error" / "info" / "debug"
 log_level = "info"
 
-# 同梱以外のモデルを使うときだけ指定します。空なら同梱のモデルを使います
-model_dir = ""
-# model_dir のモデルの種類: "small-streaming" / "tiny-streaming"
+# 使うモデルの種類: "small-streaming"（標準）/ "tiny-streaming" / "base"
+# base はストリーミング非対応で、話の区切りが確定するまで途中の文字が出ません
+# 配布物に入っているのは small-streaming だけです
 model_arch = "small-streaming"
+# モデルの置き場所。空なら同梱のモデル置き場を使います
+model_dir = ""
 
 # 認識結果の置換表。左の文字列を右の文字列に置き換えます
 [replace]

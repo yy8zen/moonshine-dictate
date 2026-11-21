@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Callable, Protocol
 
-from moonshine_dictate.platform_info import IS_LINUX, is_wayland
+from moonshine_dictate.platform_info import IS_MACOS, is_wayland
 
 
 class Inserter(Protocol):
@@ -31,10 +31,12 @@ def create(method: str, restore_clipboard: bool,
     from moonshine_dictate.insert.clipboard import ClipboardInserter
 
     if method == "live":
-        if IS_LINUX:
-            # X11 の XTest で日本語を送ると、Qt などのアプリで文字が抜けたり重なったりする
-            # （Xvfb 上の検証で「こんにちは、世界。」が「こんんちはは世界界」になった）。
-            # そのため、区切りごとにクリップボード経由で貼り付ける
+        if not IS_MACOS:
+            # Windows と Linux では、日本語を1文字ずつキー入力として送ると文字が化ける。
+            # - Windows: 日本語 IME がオンのとき、「もう次に進んでも大丈夫ですよ」が
+            #   「もうんでもですよ大丈夫次進」になった（2026年11月、Windows 11 の実機）
+            # - Linux（X11）: XTest で「こんにちは、世界。」が「こんんちはは世界界」になった（Xvfb 上の検証）
+            # そのため、確定した区切りごとにクリップボード経由で貼り付ける
             return ClipboardInserter(restore_clipboard, wait_keys_released, live=True)
         from moonshine_dictate.insert.live import LiveInserter
 

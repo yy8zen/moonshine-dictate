@@ -8,3 +8,4 @@ dist/
 .pytest_cache/
 # scripts/fetch_model.py がダウンロードするモデル。配布物にはビルド時に入れる
 models/
+recordings/

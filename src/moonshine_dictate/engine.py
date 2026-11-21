@@ -25,6 +25,8 @@ BLOCK_FRAMES = 1024
 MODEL_DIRS = {
     "small-streaming": ("small-streaming-ja", "SMALL_STREAMING"),
     "tiny-streaming": ("tiny-streaming-ja", "TINY_STREAMING"),
+    # ストリーミング非対応。区切りが確定するまで途中結果は出ないが、Small Streaming より大きい
+    "base": ("base-ja", "BASE"),
 }
 BUNDLED_ARCH = "small-streaming"
 
@@ -36,10 +38,15 @@ class ModelSpec:
 
 
 def resolve_model(model_dir: str, model_arch: str) -> ModelSpec:
-    """使うモデルの場所を決める。model_dir が空なら同梱のモデルを使う（要件 R2.2）。"""
+    """使うモデルの場所を決める。
+
+    model_dir が空なら、同梱のモデル置き場（models/）から model_arch のモデルを探す（要件 R2.2）。
+    配布物に入っているのは small-streaming だけなので、ほかの種類は開発時に
+    scripts/fetch_model.py でダウンロードしたものを使う。
+    """
+    dirname, arch_name = MODEL_DIRS[model_arch]
     if model_dir:
-        return ModelSpec(Path(model_dir).expanduser(), MODEL_DIRS[model_arch][1])
-    dirname, arch_name = MODEL_DIRS[BUNDLED_ARCH]
+        return ModelSpec(Path(model_dir).expanduser(), arch_name)
     return ModelSpec(resource_root() / "models" / dirname, arch_name)
 
 
